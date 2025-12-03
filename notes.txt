@@ -1,1 +1,36 @@
 https://developers.facebook.com/apps
+
+########################################################################
+######some script testing in cv_parser##################
+########################################################################
+
+
+# 1. REPLACE utils/cv_parser.py (code above - CLEAN)
+# 2. RUN:
+python -c "
+from utils.cv_parser import cv_parser
+p = cv_parser.get_profile()
+print('✅ SUCCESS!')
+print('NAME:', p['full_name'])
+print('SKILLS:', len(p['skills']), list(p['skills'].keys())[:10])
+print('PROJECTS:', len(p['projects']))
+"
+
+python -c "
+from utils.cv_parser import cv_parser
+p = cv_parser.get_profile()
+print('✅ FULL:', p['full_name'])
+print('✅ SKILLS ({})'.format(len(p['skills'])) , list(p['skills'].keys())[:15])
+print('✅ PROJECTS ({})'.format(len(p['projects'])), p['projects'])
+"
+
+# 1. REPLACE utils/cv_parser.py with FIXED code
+# 2. RUN:
+python -c "
+from utils.cv_parser import cv_parser
+profile = cv_parser.get_profile()
+print('✅ FULL NAME:', profile.get('full_name'))
+print('✅ EMAIL:', profile.get('email'))
+print('✅ SKILLS:', list(profile.get('skills', {}).keys()))
+print('✅ PROJECTS:', profile.get('projects', [])[:3])
+"
