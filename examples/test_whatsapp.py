@@ -32,3 +32,28 @@ status_res = requests.get(
     headers={"Authorization": f"Bearer {ACCESS_TOKEN}"}
 )
 print(status_res.json())  # Status!
+
+
+#!/usr/bin/env python3
+"""
+TEST YOUR WHATSAPP ALERTS RIGHT NOW with your credentials.
+"""
+from utils.whatsapp_notifier import notifier
+
+print("🧪 TESTING WHATSAPP WITH YOUR CREDENTIALS...")
+
+# Real job example
+test_job = {
+    'job_title': 'Senior Python Developer (REMOTE)',
+    'company_name': 'TechCorp Berlin GmbH',
+    'location': 'Berlin, Germany (Remote OK)',
+    'job_url': 'https://apply.techcorp.de/senior-python-2025',
+    'skills_match_percent': '94%'
+}
+
+# TEST HIGH SCORE (will trigger)
+success = notifier.send_job_alert(test_job, 94.5)
+
+print(f"\n🎉 TEST RESULT: {'✅ SUCCESS' if success else '❌ FAILED (non-blocking)'}")
+print("Check your WhatsApp now! 📱")
+

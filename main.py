@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
-
+from utils.whatsapp_notifier import notifier
 import asyncio
 import google.generativeai as genai
 import time
@@ -43,7 +43,7 @@ async def process_job_parallel(job):
     }
 
 async def orchestrate(query: str = None, page: int = 1):
-    """Process single query/page."""
+    """Process single query/page - WHATSAPP ALERTS ADDED."""
     if not query:
         query = random.choice(QUERIES)
     
@@ -76,6 +76,23 @@ async def orchestrate(query: str = None, page: int = 1):
             print(f"❌ Analysis error: {e}")
             continue
         
+        # 🔥 NEW: CALCULATE SCORE (simple for now, enhance later)
+        score = 75 + random.uniform(-10, 25)  # Demo: 65-100 range
+        print(f"📊 Calculated score: {score:.1f}/100")
+        
+        # 🔥 NEW: WHATSAPP ALERT (non-blocking!)
+        try:
+            alert_sent = notifier.send_job_alert(job, score)
+            if alert_sent:
+                job['WhatsApp Alert'] = 'Sent'
+                job['Alert Score'] = f"{score:.1f}"
+                print("📱 WHATSAPP ALERT SENT! 🚨")
+            else:
+                job['WhatsApp Alert'] = 'Skipped/Low score'
+        except Exception as e:
+            print(f"⚠️ WhatsApp skipped (non-blocking): {e}")
+            job['WhatsApp Alert'] = 'Error'
+        
         job['Date Scraped'] = time.strftime("%Y-%m-%d")
         job['Verification Status'] = 'Pending'
         job['Priority Level'] = 'Medium'
@@ -91,6 +108,7 @@ async def orchestrate(query: str = None, page: int = 1):
     
     print(f"✅ Round complete: {saved}/{len(jobs)} saved\n")
     return saved
+
 
 async def orchestrate_batch(target_jobs: int = 30):
     """Loop through queries + pages until target reached."""
