@@ -97,6 +97,8 @@ async def orchestrate(query: str = None, page: int = 1):
         job['Verification Status'] = 'Pending'
         job['Priority Level'] = 'Medium'
         
+
+        
         try:
             manager.append_job(job)
             saved += 1
